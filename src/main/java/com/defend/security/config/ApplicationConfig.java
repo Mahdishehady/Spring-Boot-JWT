@@ -19,10 +19,10 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private UserRespository repository;
+    private final UserRespository repository;
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> repository.findBYEmail(username)
+        return username -> repository.findByEmail(username)//should return 1
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
         @Bean

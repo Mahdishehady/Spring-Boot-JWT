@@ -1,6 +1,7 @@
 package com.defend.security.auth;
 
 
+import com.defend.security.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequest {
 
-        private String firstname;
-        private String lastname;
-        private String email;
-        private String password;
+    private String firstname;
+    private String lastname;
+    private String email;
+    private String password;
+    private Role role;
+    private boolean mfaEnabled;
 
-    }
+}
 
