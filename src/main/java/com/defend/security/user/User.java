@@ -34,8 +34,10 @@ public class User implements UserDetails {
     private String lastname;
     private String email;
     private String password;
+    private boolean mfaEnabled;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private String secret;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
