@@ -17,18 +17,14 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         var response = ResponseEntity.ok(service.register(request));
-
-        if(request.isMfaEnabled())
-        {
+        if (request.isMfaEnabled())
             return ResponseEntity.ok(response);
-        }
-            return ResponseEntity.accepted().build();
+        return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
-//        return ResponseEntity.accepted().build();
     }
 
     @PostMapping("/verify")
