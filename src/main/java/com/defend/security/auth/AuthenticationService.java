@@ -34,9 +34,10 @@ public class AuthenticationService {
                     throw new IllegalStateException("User exists (:>");
                 }
 
-                var user = User.builder().firstname(request.getFirstname()).lastname(request.getLastname()).email(request.getEmail()).password(passwordEncoder.encode(request.getPassword())).role(request.getRole()).mfaEnabled(request.isMfaEnabled()).build();
+                var user = User.builder().firstname(request.getFirstname()).lastname(request.getLastname()).email(request.getEmail()).password(passwordEncoder.encode(request.getPassword())).role(Role.USER).mfaEnabled(request.isMfaEnabled()).build();
 
-                if (request.isMfaEnabled()) user.setSecret(tfaService.generateNewSecret());
+                if (request.isMfaEnabled())
+                    user.setSecret(tfaService.generateNewSecret());
                 var savedUser = repository.save(user);
 
                 var jwtToken = jwtService.generateToken(user);
@@ -54,12 +55,19 @@ public class AuthenticationService {
                     //check if user entered and if not it will throw an exception
             ));
             var user = repository.findByEmail(request.getEmail()).orElseThrow();
-            if (user.isMfaEnabled()) {
-                return AuthenticationResponse.builder().token("").mfaEnabled(true).build();
-            }
             var jwtToken = jwtService.generateToken(user);
-            return AuthenticationResponse.builder().token(jwtToken).mfaEnabled(false).build();
-        } catch (Exception ex) {
+            if (user.isMfaEnabled()) {
+                return AuthenticationResponse.builder()
+                        .token(jwtToken)
+                        .mfaEnabled(true)
+                        .build();
+            }
+            return AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .mfaEnabled(false)
+                    .build();
+
+     } catch (Exception ex) {
             return new AuthenticationResponse(null, null, false, ex.getMessage());
         }
     }
